@@ -9,7 +9,7 @@ license:             GPL-3
 license-file:        LICENSE
 author:              Leif Warner
 maintainer:          abimelech@gmail.com
--- copyright:           
+ copyright:          2018 
 category:            Web
 build-type:          Simple
 extra-source-files:  ChangeLog.md
@@ -17,7 +17,7 @@ cabal-version:       >=1.10
 
 executable AcidServantExample
   main-is:             Main.hs
-  other-modules:       App
+  other-modules:       AcidReader, ServantAcidGlue, Model, Controller
   other-extensions:    DeriveDataTypeable, DeriveGeneric, DataKinds, TypeOperators, TypeApplications
   build-depends:       base >=4.10 && <4.11,
                        mtl >=2.2 && <2.3,
