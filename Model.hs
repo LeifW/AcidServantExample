@@ -1,11 +1,10 @@
-{-# LANGUAGE DeriveDataTypeable, DeriveGeneric, DeriveAnyClass, TemplateHaskell, TypeFamilies, FlexibleContexts, OverloadedStrings #-}
+{-# LANGUAGE DeriveGeneric, DeriveAnyClass, TemplateHaskell, TypeFamilies, FlexibleContexts, OverloadedStrings #-}
 module Model (Name, Person, name, PeopleDb(PeopleDb), AllPeople(AllPeople), LookupPerson(LookupPerson), SetPerson(SetPerson), samplePerson) where
 
 import Control.Monad.Reader (MonadReader, asks)
 import Control.Monad.State (MonadState, get, put)
 import Data.Acid (Query, Update, makeAcidic)
 import Data.SafeCopy (deriveSafeCopy, base)
-import Data.Typeable (Typeable)
 import GHC.Generics (Generic)
 
 import Data.Text (Text())
@@ -20,7 +19,7 @@ type Name = Text
 data Person = Person {
   name :: Name,
   age :: Int
-} deriving (Show, Typeable, Generic, ToJSON, FromJSON)
+} deriving (Show, Generic, ToJSON, FromJSON)
 
 samplePerson = Person "Bob" 40
 

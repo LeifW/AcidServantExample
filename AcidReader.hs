@@ -2,17 +2,18 @@
 
 module AcidReader (AcidIO, liftedQuery, liftedUpdate) where
 
-import Control.Monad.Reader (MonadIO, MonadReader, ask, liftIO)
+import Control.Monad.Reader (MonadIO, MonadReader, asks, liftIO)
 import Data.Acid
+import Data.Has
 
-type AcidIO event m = (MonadIO m, MonadReader (AcidState (EventState event)) m)
+type AcidIO r event m = (MonadIO m, MonadReader r m, Has (AcidState (EventState event)) r)
 
-liftedQuery :: (QueryEvent event, AcidIO event m) => event -> m (EventResult event)
+liftedQuery :: (QueryEvent event, AcidIO r event m) => event -> m (EventResult event)
 liftedQuery q = do
-  db <- ask
+  db <- asks getter
   liftIO $ query db q
 
-liftedUpdate :: (UpdateEvent event, AcidIO event m) => event -> m (EventResult event)
+liftedUpdate :: (UpdateEvent event, AcidIO r event m) => event -> m (EventResult event)
 liftedUpdate q = do
-  db <- ask
+  db <- asks getter
   liftIO $ update db q
