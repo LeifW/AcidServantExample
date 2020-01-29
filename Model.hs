@@ -31,25 +31,16 @@ newtype PeopleDb = PeopleDb { peopleMap :: Map.Map Name Person }
 deriveSafeCopy 0 'base ''Person
 deriveSafeCopy 0 'base ''PeopleDb
 
-allPeople' :: MonadReader PeopleDb m => m [Person]
-allPeople' = asks $ Map.elems . peopleMap
+allPeople :: MonadReader PeopleDb m => m [Person]
+allPeople = asks $ Map.elems . peopleMap
 
-allPeople :: Query PeopleDb [Person]
-allPeople = allPeople'
+lookupPerson :: MonadReader PeopleDb m => Name -> m (Maybe Person)
+lookupPerson name = asks $ Map.lookup name . peopleMap
 
-lookupPerson' :: MonadReader PeopleDb m => Name -> m (Maybe Person)
-lookupPerson' name = asks $ Map.lookup name . peopleMap
-
-lookupPerson :: Name -> Query PeopleDb (Maybe Person)
-lookupPerson = lookupPerson'
-
-setPerson' :: MonadState PeopleDb m => Name -> Person -> m Bool
-setPerson' name person = do
+setPerson :: MonadState PeopleDb m => Name -> Person -> m Bool
+setPerson name person = do
   PeopleDb db <- get
   put $ PeopleDb $ Map.insert name person db
   pure $ Map.member name db
-
-setPerson :: Name -> Person -> Update PeopleDb Bool
-setPerson = setPerson'
 
 makeAcidic ''PeopleDb ['lookupPerson, 'allPeople, 'setPerson]
