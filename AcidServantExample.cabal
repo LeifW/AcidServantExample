@@ -32,13 +32,11 @@ library
                        servant-docs, 
                        aeson >=1.2 && <1.5,
                        warp >=3.2 && <3.4
-  other-extensions:    DeriveDataTypeable, DeriveGeneric, DataKinds, TypeOperators, TypeApplications
   default-language:    Haskell2010
   ghc-options:         -Wall
 
 executable AcidServantExample
   main-is:             Main.hs
-  other-extensions:    DeriveDataTypeable, DeriveGeneric, DataKinds, TypeOperators, TypeApplications
   build-depends:       AcidServantExample,
                        base >=4.10 && <4.14,
                        containers,
