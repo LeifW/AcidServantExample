@@ -1,9 +1,9 @@
 {-# LANGUAGE DeriveGeneric, DeriveAnyClass, TemplateHaskell, TypeFamilies, FlexibleContexts, OverloadedStrings #-}
-module Model (Name, Person, name, PeopleDb(PeopleDb), AllPeople(AllPeople), LookupPerson(LookupPerson), SetPerson(SetPerson), samplePerson) where
+module Model (Name, Person(name), PeopleDb(PeopleDb), AllPeople(AllPeople), LookupPerson(LookupPerson), SetPerson(SetPerson), samplePerson) where
 
 import Control.Monad.Reader (MonadReader, asks)
 import Control.Monad.State (MonadState, get, put)
-import Data.Acid (Query, Update, makeAcidic)
+import Data.Acid (makeAcidic)
 import Data.SafeCopy (deriveSafeCopy, base)
 import GHC.Generics (Generic)
 
@@ -21,6 +21,7 @@ data Person = Person {
   age :: Int
 } deriving (Show, Generic, ToJSON, FromJSON)
 
+samplePerson :: Person
 samplePerson = Person "Bob" 40
 
 instance ToSample Person where

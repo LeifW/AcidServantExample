@@ -1,11 +1,11 @@
 {-# LANGUAGE DataKinds, TypeOperators, FlexibleContexts, RankNTypes #-}
-module ServantAcidGlue (ReaderAcidHandler, serveReader, maybeError) where
+module ServantReaderT (ReaderHandler, serveReader, maybeError) where
 
 import Control.Monad.Reader (ReaderT, runReaderT)
 import Control.Monad.Error.Class (MonadError, liftEither)
 import Data.Either.Combinators (maybeToRight)
-import Data.Acid (AcidState)
-import Servant
+import Data.Proxy (Proxy)
+import Servant.Server (HasServer, ServerT, Handler, hoistServer, serve, Application)
 
 -- From http://hackage.haskell.org/package/natural-transformation-0.4/docs/Control-Natural.html#t:-126--62-
 infixr 0 ~>
@@ -16,7 +16,6 @@ maybeError :: MonadError e m => e -> Maybe a -> m a
 maybeError err = liftEither . maybeToRight err
 
 type ReaderHandler s = ReaderT s Handler
-type ReaderAcidHandler s = ReaderHandler (AcidState s)
 
 -- This seems like it could be upstreamed into Servant?
 serveMonadStack :: HasServer api '[] => Proxy api -> (m ~> Handler) -> ServerT api m -> Application

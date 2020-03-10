@@ -1,32 +1,16 @@
-{-# LANGUAGE DataKinds, TypeFamilies, TypeOperators, TypeApplications, FlexibleInstances #-}
+{-# LANGUAGE DataKinds, TypeFamilies, TypeApplications, TypeOperators, FlexibleInstances #-}
 module Controller where
 
-import Data.Acid (AcidState)
-import Servant
-import Servant.Docs
-
 import Data.Functor (($>))
+import Servant
+import Data.Acid (AcidState)
 
-import Model
 import AcidReader
-import ServantAcidGlue
+import ServantReaderT
+import Model
+import API
 
-type NameSegment = Capture "name" Name
-
-type PeopleIndex = Get '[JSON] [Person]
-type SpecificPerson = NameSegment :> Get '[JSON] Person
-type UpdateSpecificPerson = NameSegment:> ReqBody '[JSON] Person :> Put '[JSON] Person
-
-instance ToCapture NameSegment where
-  toCapture _ = DocCapture "name" "Name of the person being referenced."
-
-type PeopleAPI = "people" :> (
-    PeopleIndex :<|>
-    SpecificPerson :<|>
-    UpdateSpecificPerson
-  )
-
-type PeopleServer api = ServerT api (ReaderAcidHandler PeopleDb)
+type PeopleServer api = ServerT api (ReaderHandler (AcidState PeopleDb))
 
 peopleIndex :: PeopleServer PeopleIndex
 peopleIndex = liftedQuery AllPeople
